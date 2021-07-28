@@ -15,7 +15,7 @@ $ docker-compose build -d
 This will open the docker shell and you can run one of the following commands:
 
 Run the entire test suite
-``bash
+```bash
 $ docker-compose run orderserviceapp sh
 $ pytest 
 ```
