@@ -1,0 +1,96 @@
+openapi: 3.0.0
+info:
+  description: Fruit Orders
+  version: 1.0.0-oas3
+  title: Fruit Orders API
+  contact:
+    email: lakshmi.purushothaman@aexp.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: order
+    description: Create Fruit order
+paths:
+  /orders:
+    post:
+      tags:
+        - order
+      summary: Create new order
+      description: |
+        This endpoint should be consumed to place a fruit order <br /><br />
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrderRequest'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  order_id:
+                    type: string
+                    description: Order id
+                    example: 313745123
+        4XX:
+          description: Client error (4XX) response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message
+                    example: Product not found
+                  code:
+                    type: integer
+                    description: Error code
+                    example: 404
+        5XX:
+          $ref: '#/components/responses/UnexpectedError'
+servers:
+  - url: 'https://virtserver.swaggerhub.com/EMMOnboarding/FruitOrder/1.0.0'
+components:
+  responses:
+    Created:
+      description: Created
+    NoContent:
+      description: No content (success)
+    NotFound:
+      description: The specified resource was not found
+    Unauthorized:
+      description: Unauthorized
+    BadRequest:
+      description: Bad request.
+    UnexpectedError:
+      description: Unexpected error.
+      
+  schemas:
+    OrderRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        products:
+          $ref: '#/components/schemas/Product'
+    Product:
+      type: object
+      properties:
+        type:
+          type: string
+          description: The product type that is available to place a order
+          enum:
+            - Apples
+            - Oranges
+          example: "Oranges"
+        units:
+          type: integer
+          description: The amount of units of the product requested by the client.
+          example: 4
+      

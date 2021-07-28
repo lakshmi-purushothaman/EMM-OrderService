@@ -1,0 +1,12 @@
+version: "3"
+services:
+  orderserviceapp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes: 
+      - .:/usr/src/app
+    ports: 
+      - 5000:80
+    image: orderservice-web-app
+    container_name: orderservice-web-app
