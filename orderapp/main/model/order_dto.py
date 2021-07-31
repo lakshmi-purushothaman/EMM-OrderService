@@ -17,8 +17,8 @@ class OrderDto:
 
     orderResponse = api.model('OrderResponse', {
         'username': fields.String(required=True, default='Adam'),
-        'orderid': fields.Integer(required=True),
+        'orderid': fields.String(required=True),
         'orderdate': fields.DateTime(required=True),
-        'products':fields.Nested(product, required=True),
+        'products':fields.List(fields.Nested(product, required= True)),
         'totalordercost': fields.Float(required=True)
     })
