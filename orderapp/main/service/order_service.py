@@ -4,6 +4,8 @@ import logging
 from orderapp.main.model.order_dto import OrderDto
 from orderapp.main.model.order_model import Order
 from orderapp.main.model.product_model import Product
+from orderapp.main.model.product_catalog_model import ProductCatalog
+from orderapp.main.model.offer_model import Offer
 
 from orderapp.db import db
 
@@ -26,19 +28,25 @@ def save_order(order_request):
             product_request = order_request['products']
             
             if  product_request != None:
+                catalogs =  ProductCatalog.query.all()
                 for product in product_request:
-                    product = Product(
-                        producttype=product['producttype'],
-                        units=product['units'],
-                        order_id=order_id
-                    )
-                    products.append(product)
+                    product_type=product['producttype']
+                    for catalog in catalogs:
+                        if catalog.producttype == product_type:
+                            product = Product(
+                                producttype=product_type,
+                                units=product['units'],
+                                discountedunits=calculate_total_product_units_offer(requested_product_unit=product['units'],catalog_id=catalog.catalog_id),
+                                order_id=order_id,
+                                catalog_id=catalog.catalog_id
+                            )
+                            products.append(product)
 
             order = Order(
                 username=order_request['username'],
                 orderid=order_id,
                 orderdate=datetime.datetime.utcnow(),
-                totalordercost=calculate_total_order_cost(order_request['products']),
+                totalordercost=calculate_total_order_cost(products),
                 products=products
             )
             save_changes(order)
@@ -59,20 +67,27 @@ def calculate_total_order_cost(products):
         order_cost=0
         if products!=None:
             for product in products:
-                product_type = product['producttype']
-                number_of_products = product['units']
-                logging.info(product['units'])
-
-                if (product_type=='Apples'):
-                    order_cost = order_cost + productcost['Apples']*number_of_products
-                elif (product_type=='Oranges'):
-                    order_cost = order_cost + productcost['Oranges']*number_of_products
+                #catalog = ProductCatalog.query.filter_by(catalog_id=product.catalog_id).first()
+                catalog = get_product_catalog_for_id(product.catalog_id)
+                #offer = Offer.query.filter_by(catalog_id=catalog.catalog_id).first()
+                #offer = get_offer_for_catalog(catalog.catalog_id)
+                order_cost = order_cost + catalog.cost*product.units
+                #number_of_products = product.units + (product.units*offer.discount_fractional_value_on_unit)
     except KeyError as exp:
         raise KeyError
         logging.error("Key missing", exc_info=True)
     except Exception as exp:
         logging.error("Error occured while calculating the total cost", exc_info=True)
     return order_cost
+
+def calculate_total_product_units_offer(requested_product_unit, catalog_id):
+    try:
+        if requested_product_unit != None and catalog_id != None:
+            offer = get_offer_for_catalog(catalog_id)
+            number_of_products = requested_product_unit + (requested_product_unit*offer.discount_fractional_value_on_unit)
+    except Exception as exp:
+        logging.error("Error occured while calculating the total cost", exc_info=True)
+    return number_of_products
 
 def save_changes(data):
     db.session.add(data)
@@ -83,3 +98,9 @@ def get_orders():
 
 def get_a_order(order_id):
     return Order.query.filter_by(orderid=order_id).first()
+
+def get_product_catalog_for_id(catalog_id):
+    return ProductCatalog.query.filter_by(catalog_id=catalog_id).first()
+
+def get_offer_for_catalog(catalog_id):
+    return Offer.query.filter_by(catalog_id=catalog_id).first()

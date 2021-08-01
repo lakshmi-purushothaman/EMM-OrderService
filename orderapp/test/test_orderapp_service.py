@@ -3,6 +3,7 @@ import logging
 
 from orderapp.main.model.order_dto import OrderDto
 from orderapp.main.service.order_service import save_order, get_orders, get_a_order
+from orderapp.main.model.order_model import Order
 
 from orderapp.main import app
 

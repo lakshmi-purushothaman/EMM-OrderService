@@ -4,6 +4,7 @@ from flask_restplus import Api, Resource, reqparse, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 
 from orderapp.db import db
+from orderapp.reference_data_load import init_db
 
 from .controller.order_controller import api as order_ns
 
@@ -25,8 +26,11 @@ app.register_blueprint(order_blueprint)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///orderservice.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['PROPAGATE_EXCEPTIONS'] = True
+app.config['RESTPLUS_MASK_SWAGGER'] = False
 
 db.init_app(app)
+
+
 
 ### swagger specific ###
 SWAGGER_URL = '/swagger'
