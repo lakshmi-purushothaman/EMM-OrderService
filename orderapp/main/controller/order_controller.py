@@ -15,6 +15,7 @@ order_response = OrderDto.orderResponse
 class Order_List(Resource):
     @api.expect(order_request, validate=True)
     @api.doc("This endpoint should be consumed to place a fruit order")
+    @api.response(500, "Internal server error")
     @api.marshal_with(order_response, envelope="data", code=200)
     def post(self):
         return save_order(request.json)

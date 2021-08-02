@@ -25,7 +25,7 @@ def save_order(order_request):
             product_request = order_request['products']
             
             if  product_request != None:
-                catalogs =  ProductCatalog.query.all()
+                catalogs =  get_all_product_catalog()
                 for product in product_request:
                     product_type=product['producttype']
                     for catalog in catalogs:
@@ -73,6 +73,7 @@ def calculate_total_order_cost(products):
         logging.error("Error occured while calculating the total cost", exc_info=True)
     return order_cost
 
+#Calculates the total units to be added in the basket after applying the offers
 def calculate_total_product_units_offer(requested_product_unit, catalog_id):
     number_of_products=0
     try:
@@ -93,6 +94,9 @@ def get_orders():
 
 def get_a_order(order_id):
     return Order.query.filter_by(orderid=order_id).first()
+
+def get_all_product_catalog():
+    return ProductCatalog.query.all()
 
 def get_product_catalog_for_id(catalog_id):
     return ProductCatalog.query.filter_by(catalog_id=catalog_id).first()
