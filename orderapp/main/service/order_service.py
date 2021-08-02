@@ -16,9 +16,6 @@ logging.basicConfig(level=logging.DEBUG)
 
 product = OrderDto.product
 
-#Product cost 
-productcost = {'Apples': 1, 'Oranges':0.7}
-
 def save_order(order_request):
     order = lambda: None
     try:
@@ -67,12 +64,8 @@ def calculate_total_order_cost(products):
         order_cost=0
         if products!=None:
             for product in products:
-                #catalog = ProductCatalog.query.filter_by(catalog_id=product.catalog_id).first()
                 catalog = get_product_catalog_for_id(product.catalog_id)
-                #offer = Offer.query.filter_by(catalog_id=catalog.catalog_id).first()
-                #offer = get_offer_for_catalog(catalog.catalog_id)
                 order_cost = order_cost + catalog.cost*product.units
-                #number_of_products = product.units + (product.units*offer.discount_fractional_value_on_unit)
     except KeyError as exp:
         raise KeyError
         logging.error("Key missing", exc_info=True)
@@ -81,7 +74,9 @@ def calculate_total_order_cost(products):
     return order_cost
 
 def calculate_total_product_units_offer(requested_product_unit, catalog_id):
+    number_of_products=0
     try:
+        logging.info(requested_product_unit)
         if requested_product_unit != None and catalog_id != None:
             offer = get_offer_for_catalog(catalog_id)
             number_of_products = requested_product_unit + (requested_product_unit*offer.discount_fractional_value_on_unit)

@@ -44,13 +44,3 @@ SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
 )
 app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
 ### end swagger specific ###
-
-@app.route("/")
-def index():
-    #Open the Readme file
-    with open(os.path.dirname(app.root_path) + "/README.md", "r") as markdown_file:
-        #Read the file
-        content = markdown_file.read()
-    #Convert to HTML
-    return markdown.markdown(content)
-

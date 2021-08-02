@@ -11,25 +11,11 @@ import datetime
 
 def init_db():
     """Init the DB with some setup data."""
-    #with app.app_context():
     db.drop_all()
     db.create_all()
-    create_order_data()
     create_catalog_data()
     create_offer_data()
         
-def create_order_data():
-    orders = [
-            Order(username = "Test User1",
-                orderid = "Test ID",
-                orderdate= datetime.datetime.utcnow(),
-                products= [ Product(producttype="Apples", units= 11, discountedunits=22, order_id="Test ID",catalog_id=1),
-                            Product(producttype="Oranges", units= 10, discountedunits=15, order_id="Test ID",catalog_id=2)
-                ],
-                totalordercost = 18)
-            ]
-    for order in orders:
-        save_session(order)
 
 def create_offer_data():
     offers = [
@@ -50,5 +36,3 @@ def create_catalog_data():
 def save_session(data):
     db.session.add(data)
     db.session.commit()
-
-#init_db()

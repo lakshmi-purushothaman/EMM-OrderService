@@ -1,8 +1,8 @@
 import pytest
-import logging
+import logging, json
 
 from orderapp.main.model.order_dto import OrderDto
-from orderapp.main.service.order_service import save_order, get_orders, get_a_order
+from orderapp.main.service.order_service import save_order, get_orders, get_a_order, calculate_total_product_units_offer
 from orderapp.main.model.order_model import Order
 
 from orderapp.main import app
@@ -33,7 +33,7 @@ def test_save_order():
                     }
     order = save_order(order_request)
     assert order is not None
-    
+
 def test_save_order_without_request():
     order_request = None
     order = save_order(order_request)
@@ -44,6 +44,36 @@ def test_save_order_without_products():
         order_request = { "ordername": "string"
                         }
         order = save_order(order_request)
+
+def test_save_order_200(app_inst):
+    order_request = { "username": "Test User Data Check",
+                      "products": [
+                            {
+                            "producttype": "Apples",
+                            "units": 10
+                            }
+                        ]
+                    }
+
+    client = app_inst.test_client()
+    response = client.post("/order/", data=json.dumps(order_request), headers={"Content-Type": "application/json"})
+    assert response.status_code == 200
+
+def test_save_order_check_for_data(app_inst):
+    order_request = { "username": "Test User Data Check",
+                      "products": [
+                            {
+                            "producttype": "Apples",
+                            "units": 5
+                            }
+                        ]
+                    }
+
+    client = app_inst.test_client()
+    response = client.post("/order/", data=json.dumps(order_request), headers={"Content-Type": "application/json"})
+    assert b'"username": "Test User Data Check"' in response.data
+    assert b'"discountedunits": 10' in response.data
+
 
 def test_get_all_orders_200(app_inst):
     client = app_inst.test_client()
