@@ -8,7 +8,7 @@ This service is packaged to run with all dependencies installed within a Docker 
 ## Running the App
 To run open a shell
 ```bash
-$ docker-compose build -d
+$ docker-compose up
 ```
 
 ## App Testing
