@@ -66,9 +66,10 @@ def calculate_total_order_cost(products):
             for product in products:
                 catalog = get_product_catalog_for_id(product.catalog_id)
                 order_cost = order_cost + catalog.cost*product.units
-    except KeyError as exp:
-        raise KeyError
-        logging.error("Key missing", exc_info=True)
+                logging.info(order_cost)
+    except AttributeError as exp:
+        raise AttributeError
+        logging.error("Attribute missing", exc_info=True)
     except Exception as exp:
         logging.error("Error occured while calculating the total cost", exc_info=True)
     return order_cost
