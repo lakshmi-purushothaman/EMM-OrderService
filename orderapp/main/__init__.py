@@ -4,19 +4,32 @@ from flask_restplus import Api, Resource, reqparse, fields, marshal_with
 from flask_sqlalchemy import SQLAlchemy
 
 from orderapp.db import db
-from .controller.order_controller import api as order_ns
+from orderapp.main.controller.order_controller import api as order_ns
+
+from orderapp.main.controller.offer_controller import offerapi as offer_ns
 import os, markdown
 
 #Create an instance of Flask
 app = Flask(__name__)
 
-#Flask Blueprint config
-order_blueprint = Blueprint('api', __name__)
+#Flask Blueprint config for order
+order_blueprint = Blueprint('api', __name__, url_prefix='/order')
 api = Api(order_blueprint, version='1.0', title='Fruit Orders API',
     description='Fruit Orders',
 )
-api.add_namespace(order_ns, path='/order')
+api.add_namespace(order_ns)
+
+
+#Flask Blueprint config for offer
+offer_blueprint = Blueprint('offerapi', __name__, url_prefix='/offer')
+offerapi = Api(offer_blueprint, version='1.0', title='Fruit Offers API',
+    description='Fruit Offers',
+)
+offerapi.add_namespace(offer_ns)
+
+#App registering with blueprint
 app.register_blueprint(order_blueprint)
+app.register_blueprint(offer_blueprint)
 
 #SQLAlchemy config
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///orderservice.db'

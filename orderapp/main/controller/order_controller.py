@@ -2,9 +2,9 @@ from flask import request
 
 from flask_restplus import Resource
 
-from ..model.order_dto import OrderDto
+from orderapp.main.model.order_dto import OrderDto
 
-from ..service.order_service import save_order, get_orders, get_a_order
+from orderapp.main.service.order_service import save_order, get_orders, get_a_order
 
 api = OrderDto.api
 order_request = OrderDto.orderRequest
