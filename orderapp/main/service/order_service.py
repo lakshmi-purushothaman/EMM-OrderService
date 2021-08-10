@@ -82,6 +82,9 @@ def calculate_total_product_units_offer(requested_product_unit, catalog_id):
         if requested_product_unit != None and catalog_id != None:
             offer = get_offer_for_catalog(catalog_id)
             number_of_products = requested_product_unit + (requested_product_unit*offer.discount_fractional_value_on_unit)
+    except AttributeError as exp:
+        raise AttributeError
+        logging.error("Attribute missing", exc_info=True)
     except Exception as exp:
         logging.error("Error occured while calculating the total cost", exc_info=True)
     return number_of_products

@@ -69,4 +69,13 @@ def test_calculate_total_order_cost_raises_attribute_error():
                                     catalog_id=12
                                     )]
             order_cost = calculate_total_order_cost(products)
-            assert order_cost == 10
+
+def test_calculate_total_product_units_offer():
+    with app.app_context():
+        number_of_discounted_products = calculate_total_product_units_offer(10, 1)
+        assert number_of_discounted_products == 20
+
+def test_calculate_total_product_units_offer_raises_attribute_error():
+    with app.app_context():
+        with pytest.raises(AttributeError) as exc_info:
+            number_of_discounted_products = calculate_total_product_units_offer(10, 100)
