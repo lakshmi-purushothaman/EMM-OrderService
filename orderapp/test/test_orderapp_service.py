@@ -42,6 +42,11 @@ def test_save_order_without_request():
     order = save_order(order_request)
     assert order is None
 
+def test_save_order_without_products_raises_exception():
+    with pytest.raises(Exception) as exc_info:
+        order_request = { "username": "Test User Post"}
+        order = save_order(order_request)
+
 def test_save_order_raises_key_error():
     with pytest.raises(KeyError) as exc_info:
         order_request = { "ordername": "string"

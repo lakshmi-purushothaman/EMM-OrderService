@@ -24,20 +24,23 @@ def save_order(order_request):
             products = []
             product_request = order_request['products']
             
-            if  product_request != None:
-                catalogs =  get_all_product_catalog()
-                for product in product_request:
-                    product_type=product['producttype']
-                    for catalog in catalogs:
-                        if catalog.producttype == product_type:
-                            product = Product(
-                                producttype=product_type,
-                                units=product['units'],
-                                discountedunits=calculate_total_product_units_offer(requested_product_unit=product['units'],catalog_id=catalog.catalog_id),
-                                order_id=order_id,
-                                catalog_id=catalog.catalog_id
-                            )
-                            products.append(product)
+            if  product_request == None:
+                raise Exception
+                logging.error("Products not included in request", exc_info=True)
+
+            catalogs =  get_all_product_catalog()
+            for product in product_request:
+                product_type=product['producttype']
+                for catalog in catalogs:
+                    if catalog.producttype == product_type:
+                        product = Product(
+                            producttype=product_type,
+                            units=product['units'],
+                            discountedunits=calculate_total_product_units_offer(requested_product_unit=product['units'],catalog_id=catalog.catalog_id),
+                            order_id=order_id,
+                            catalog_id=catalog.catalog_id
+                        )
+                        products.append(product)
 
             order = Order(
                 username=order_request['username'],
