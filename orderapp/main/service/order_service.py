@@ -24,20 +24,23 @@ def save_order(order_request):
             products = []
             product_request = order_request['products']
             
-            if  product_request != None:
-                catalogs =  get_all_product_catalog()
-                for product in product_request:
-                    product_type=product['producttype']
-                    for catalog in catalogs:
-                        if catalog.producttype == product_type:
-                            product = Product(
-                                producttype=product_type,
-                                units=product['units'],
-                                discountedunits=calculate_total_product_units_offer(requested_product_unit=product['units'],catalog_id=catalog.catalog_id),
-                                order_id=order_id,
-                                catalog_id=catalog.catalog_id
-                            )
-                            products.append(product)
+            if  product_request == None:
+                raise Exception
+                logging.error("Products not included in request", exc_info=True)
+
+            catalogs =  get_all_product_catalog()
+            for product in product_request:
+                product_type=product['producttype']
+                for catalog in catalogs:
+                    if catalog.producttype == product_type:
+                        product = Product(
+                            producttype=product_type,
+                            units=product['units'],
+                            discountedunits=calculate_total_product_units_offer(requested_product_unit=product['units'],catalog_id=catalog.catalog_id),
+                            order_id=order_id,
+                            catalog_id=catalog.catalog_id
+                        )
+                        products.append(product)
 
             order = Order(
                 username=order_request['username'],
@@ -66,9 +69,10 @@ def calculate_total_order_cost(products):
             for product in products:
                 catalog = get_product_catalog_for_id(product.catalog_id)
                 order_cost = order_cost + catalog.cost*product.units
-    except KeyError as exp:
-        raise KeyError
-        logging.error("Key missing", exc_info=True)
+                logging.info(order_cost)
+    except AttributeError as exp:
+        raise AttributeError
+        logging.error("Attribute missing", exc_info=True)
     except Exception as exp:
         logging.error("Error occured while calculating the total cost", exc_info=True)
     return order_cost
@@ -81,6 +85,9 @@ def calculate_total_product_units_offer(requested_product_unit, catalog_id):
         if requested_product_unit != None and catalog_id != None:
             offer = get_offer_for_catalog(catalog_id)
             number_of_products = requested_product_unit + (requested_product_unit*offer.discount_fractional_value_on_unit)
+    except AttributeError as exp:
+        raise AttributeError
+        logging.error("Attribute missing", exc_info=True)
     except Exception as exp:
         logging.error("Error occured while calculating the total cost", exc_info=True)
     return number_of_products
