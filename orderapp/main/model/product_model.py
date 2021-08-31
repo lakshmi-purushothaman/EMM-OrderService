@@ -8,7 +8,7 @@ class Product(db.Model):
     units = db.Column(db.Integer, nullable=False)
     discountedunits = db.Column(db.Integer, nullable=False)
     order_id = db.Column(db.String,db.ForeignKey('order.id'),nullable=False)
-    catalog_id = db.Column(db.Integer, db.ForeignKey('product_catalog.catalog_id'),nullable=False)
+    catalog_id = db.Column(db.Integer, db.ForeignKey('product_catalog.catalogid'),nullable=False)
 
     def __init__(self,producttype,units,discountedunits,order_id,catalog_id):
         self.producttype=producttype

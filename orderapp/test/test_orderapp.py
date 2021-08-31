@@ -36,7 +36,7 @@ def test_save_order_200(app_inst):
                     }
 
     client = app_inst.test_client()
-    response = client.post("/order/", data=json.dumps(order_request), headers={"Content-Type": "application/json"})
+    response = client.post("/order/fruitorders/", data=json.dumps(order_request), headers={"Content-Type": "application/json"})
     assert response.status_code == 200
 
 def test_save_order_check_for_data(app_inst):
@@ -50,26 +50,26 @@ def test_save_order_check_for_data(app_inst):
                     }
 
     client = app_inst.test_client()
-    response = client.post("/order/", data=json.dumps(order_request), headers={"Content-Type": "application/json"})
+    response = client.post("/order/fruitorders/", data=json.dumps(order_request), headers={"Content-Type": "application/json"})
     assert b'"username": "Test User Data Check"' in response.data
     assert b'"discountedunits": 10' in response.data
     
 def test_get_all_orders_200(app_inst):
     client = app_inst.test_client()
-    response = client.get("/order/")
+    response = client.get("/order/fruitorders/")
     assert response.status_code == 200
 
 def test_get_all_orders_data(app_inst):
     client = app_inst.test_client()
-    response = client.get("/order/")
+    response = client.get("/order/fruitorders/")
     assert b'"username": "Test User1"' in response.data
 
 def test_get_a_order_404(app_inst):
     client = app_inst.test_client()
-    response = client.get("/order/1")
+    response = client.get("/order/fruitorders/1")
     assert response.status_code == 404
 
 def test_get_a_order_200(app_inst):
     client = app_inst.test_client()
-    response = client.get("/order/Test ID")
+    response = client.get("/order/fruitorders/Test ID")
     assert response.status_code == 200

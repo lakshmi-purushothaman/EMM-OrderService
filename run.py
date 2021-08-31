@@ -5,7 +5,6 @@ from orderapp.reference_data_load import *
 def create_tables():
     db.drop_all()
     db.create_all()
-    create_catalog_data()
     create_offer_data()
 
 if __name__ == '__main__':

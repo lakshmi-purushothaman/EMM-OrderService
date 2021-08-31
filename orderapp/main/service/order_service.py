@@ -36,9 +36,9 @@ def save_order(order_request):
                         product = Product(
                             producttype=product_type,
                             units=product['units'],
-                            discountedunits=calculate_total_product_units_offer(requested_product_unit=product['units'],catalog_id=catalog.catalog_id),
+                            discountedunits=calculate_total_product_units_offer(requested_product_unit=product['units'],offer_id=catalog.offer_id),
                             order_id=order_id,
-                            catalog_id=catalog.catalog_id
+                            catalog_id=catalog.catalogid
                         )
                         products.append(product)
 
@@ -78,13 +78,13 @@ def calculate_total_order_cost(products):
     return order_cost
 
 #Calculates the total units to be added in the basket after applying the offers
-def calculate_total_product_units_offer(requested_product_unit, catalog_id):
+def calculate_total_product_units_offer(requested_product_unit, offer_id):
     number_of_products=0
     try:
         logging.info(requested_product_unit)
-        if requested_product_unit != None and catalog_id != None:
-            offer = get_offer_for_catalog(catalog_id)
-            number_of_products = requested_product_unit + (requested_product_unit*offer.discount_fractional_value_on_unit)
+        if requested_product_unit != None and offer_id != None:
+            offer = get_offer(offer_id)
+            number_of_products = requested_product_unit + (requested_product_unit*offer.discountfractiononunits)
     except AttributeError as exp:
         raise AttributeError
         logging.error("Attribute missing", exc_info=True)
@@ -106,7 +106,10 @@ def get_all_product_catalog():
     return ProductCatalog.query.all()
 
 def get_product_catalog_for_id(catalog_id):
-    return ProductCatalog.query.filter_by(catalog_id=catalog_id).first()
+    return ProductCatalog.query.filter_by(catalogid=catalog_id).first()
 
 def get_offer_for_catalog(catalog_id):
-    return Offer.query.filter_by(catalog_id=catalog_id).first()
+    return Offer.query.filter_by(catalogid=catalog_id).first()
+
+def get_offer(offer_id):
+    return Offer.query.filter_by(offerid=offer_id).first()
