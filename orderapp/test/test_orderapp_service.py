@@ -62,7 +62,7 @@ def test_calculate_total_order_cost():
                                 catalog_id=1
                                 )]
         order_cost = calculate_total_order_cost(products)
-        assert order_cost == 10
+        assert order_cost == 6
 
 def test_calculate_total_order_cost_raises_attribute_error():
     with app.app_context():

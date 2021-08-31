@@ -46,7 +46,7 @@ def save_order(order_request):
                 username=order_request['username'],
                 orderid=order_id,
                 orderdate=datetime.datetime.utcnow(),
-                totalordercost=calculate_total_order_cost(products),
+                totalordercost=round(calculate_total_order_cost(products),2),
                 products=products
             )
             save_changes(order)

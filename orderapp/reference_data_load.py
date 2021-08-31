@@ -16,8 +16,8 @@ def create_offer_data():
 
 def create_catalog_data():
     catalogs = [
-            ProductCatalog(producttype="Apples",cost=1,offer_id=1,catalog_id=1),
-            ProductCatalog(producttype="Oranges",cost=2,offer_id=2,catalog_id=2)
+            ProductCatalog(producttype="Apples",cost=0.60,offer_id=1,catalog_id=1),
+            ProductCatalog(producttype="Oranges",cost=0.25,offer_id=2,catalog_id=2)
     ]
     for catalog in catalogs:
         save_session(catalog)
